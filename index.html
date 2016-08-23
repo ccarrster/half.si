@@ -59,7 +59,12 @@ function uploadFiles(event)
 
                 $.each(data.files, function(key, value)
 			    {
-			        $("#uploaded").html("<img src='"+value+"'><a href='http://api.upcdatabase.org/json/863ee1ba4915a2146c71a68a375c52c8/"+data.text+"'>Details</a>");
+			    	var splits = data.text.split(":");
+			    	var code = "";
+			    	if(splits.length == 2){
+			    		code = splits[1];
+			    	}
+			        $("#uploaded").html("<img src='"+value+"'><a href='http://api.upcdatabase.org/json/863ee1ba4915a2146c71a68a375c52c8/"+code+"'>Details</a>");
 			    });
 
             }
