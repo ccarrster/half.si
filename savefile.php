@@ -27,6 +27,6 @@ else
 {
     $data = array('success' => 'Form was submitted', 'formData' => $_POST);
 }
-echo exec('zbarimg '.$fileName);
+$data['text'] = exec('zbarimg '.$fileName);
 echo json_encode($data);
 ?>
