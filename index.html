@@ -56,11 +56,12 @@ function uploadFiles(event)
             {
                 // Success so call function to process the form
                 //submitForm(event, data);
-                
+
                 $.each(data.files, function(key, value)
 			    {
-			        $("#uploaded").html("<img src='"+value+"'>");
+			        $("#uploaded").html("<img src='"+value+"'><a href='http://api.upcdatabase.org/json/863ee1ba4915a2146c71a68a375c52c8/"+data.text+"'>Details</a>");
 			    });
+
             }
             else
             {
