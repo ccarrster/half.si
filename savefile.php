@@ -1,6 +1,6 @@
 <?php
 // You need to add server side validation and better error handling here
-include_once('./lib/QrReader.php');
+
 $data = array();
 $fileName = '';
 if(isset($_FILES))
@@ -28,7 +28,6 @@ else
     $data = array('success' => 'Form was submitted', 'formData' => $_POST);
 }
 
-$code = exec('zbarimg '.$fileName);
-$data['text'] = explode(':', $code)[1];
+$data['text'] = exec('zbarimg '.$fileName);
 echo json_encode($data);
 ?>
