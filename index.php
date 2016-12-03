@@ -22,7 +22,7 @@ $link = mysqli_connect($dbaddress, $dbuser, $dbpassword, $dbschema);
 
 require_once 'php_mailer/class.phpmailer.php';
 if(isset($_GET['verify'])){
-    $updateQuery = "UPDATE request SET status = 'verified', statustimestamp = CURRENT_TIMESTAMP where verifyid = '".mysqli_real_escape_string($link, $_GET['verify'])."' and status = 'created';";
+    $updateQuery = "UPDATE request SET status = 'verified', statustimestamp = NOW() where verifyid = '".mysqli_real_escape_string($link, $_GET['verify'])."' and status = 'created';";
     $updateResult = mysqli_query($link, $updateQuery);
     if($updateResult === true){
         $rows =  mysqli_affected_rows($link);
@@ -49,7 +49,7 @@ if(isset($_GET['verify'])){
     }
 } elseif(isset($_POST['description']) && isset($_POST['quantity']) && isset($_POST['price']) && isset($_POST['email'])){
     $verifyId = uniqid("hsr", true);
-    $query = "INSERT INTO request (description, quantity, price, email, verifyid) VALUES('".mysqli_real_escape_string($link, $_POST['description'])."', '".mysqli_real_escape_string($link, $_POST['quantity'])."', '".mysqli_real_escape_string($link, $_POST['price'])."', '".mysqli_real_escape_string($link, $_POST['email'])."', '".mysqli_real_escape_string($link, $verifyId)."');";
+    $query = "INSERT INTO request (description, quantity, price, email, verifyid, inserted, statustimestamp) VALUES('".mysqli_real_escape_string($link, $_POST['description'])."', '".mysqli_real_escape_string($link, $_POST['quantity'])."', '".mysqli_real_escape_string($link, $_POST['price'])."', '".mysqli_real_escape_string($link, $_POST['email'])."', '".mysqli_real_escape_string($link, $verifyId)."', NOW(), NOW());";
     $queryResult = mysqli_query($link, $query);
     if($queryResult === true){
         $result = sendEmailMessage("verify this half.si request", "someone posted a half.si request about a ".$_POST['description'].". if this was you, click <a href='http://half.si?verify=".$verifyId."'>half.si?verify=".$verifyId."</a>. if it was not you, you can just ignore this email.", $_POST['email']);
@@ -64,7 +64,7 @@ if(isset($_GET['verify'])){
         error_log("Error running ".$query);
     }
 } elseif(isset($_GET['delete'])){
-    $updateQuery = "UPDATE request SET status = 'removed', statustimestamp = CURRENT_TIMESTAMP where verifyid = '".mysqli_real_escape_string($link, $_GET['delete'])."';";
+    $updateQuery = "UPDATE request SET status = 'removed', statustimestamp = NOW() where verifyid = '".mysqli_real_escape_string($link, $_GET['delete'])."';";
     $updateResult = mysqli_query($link, $updateQuery);
     if($updateResult === true){
         $rows =  mysqli_affected_rows($link);
