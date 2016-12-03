@@ -77,36 +77,37 @@ if(isset($_GET['verify'])){
         echo("error deleting half.si request");
         error_log("Error deleting ".$updateQuery);
     }
-} else {
-    if(isset($_POST['id']) && isset($_POST['email'])){
-        $getEmailQuery = "SELECT email, description FROM request WHERE id = '".mysqli_real_escape_string($link, $_POST['id'])."' LIMIT 1;";
-        $emailResults = mysqli_query($link, $getEmailQuery);
-        if($emailResults !== false){
-            while($requestRow = mysqli_fetch_array($emailResults)) {
-                $lookUpEmail = $requestRow['email'];
-                echo("<div>you want to go half.si on it.</div>");
-                $result = sendEmailMessage("want to go half.si?", $_POST['email']." wants to go half.si on ".$requestRow['description']." and says ".$_POST['comments'], $lookUpEmail);
-            }
-        } else {
-            echo("error loading their half.si request email address.");
-        }
-    }
-    echo('<form method="post"><div>create a half.si request</div><div>description <input name="description" type="text"></div><div>quantity <input name="quantity" type="text"></div><div>price <input name="price" type="text"></div><div>email <input name="email" type="text">(private)</div><div><input type="submit" value="create half.si request"></div></form><div>current half.si requests</div><hr>');
-    $getRequestsQuery = "SELECT id, description, quantity, price FROM request WHERE status = 'verified';";
-    $requestResults = mysqli_query($link, $getRequestsQuery);
-    if($requestResults !== false){
-        while($requestRow = mysqli_fetch_array($requestResults)) {
-            $id = $requestRow['id'];
-            $description = $requestRow['description'];
-            $quantity = $requestRow['quantity'];
-            $price = $requestRow['price'];
-            echo("<div><div>description ".$description."</div><div>quantity ".$quantity."</div><div>price ".$price."</div><div><form method='post'>email <input type='text' name='email'></div><div>comments <input type='text' name='comments'></div><div><input type='submit' value='go half.si on it'></div><input type='hidden' name='id' value='".$id."'></form></div></div><hr>");
+}
+
+if(isset($_POST['id']) && isset($_POST['email'])){
+    $getEmailQuery = "SELECT email, description FROM request WHERE id = '".mysqli_real_escape_string($link, $_POST['id'])."' LIMIT 1;";
+    $emailResults = mysqli_query($link, $getEmailQuery);
+    if($emailResults !== false){
+        while($requestRow = mysqli_fetch_array($emailResults)) {
+            $lookUpEmail = $requestRow['email'];
+            echo("<div>you want to go half.si on it.</div>");
+            $result = sendEmailMessage("want to go half.si?", $_POST['email']." wants to go half.si on ".$requestRow['description']." and says ".$_POST['comments'], $lookUpEmail);
         }
     } else {
-        echo("error loading requests.");
-        error_log("Error loading requests ".$getRequestsQuery);
+        echo("error loading their half.si request email address.");
     }
 }
+echo('<form method="post"><div>create a half.si request</div><div>description <input name="description" type="text"></div><div>quantity <input name="quantity" type="text"></div><div>price <input name="price" type="text"></div><div>email <input name="email" type="text">(private)</div><div><input type="submit" value="create half.si request"></div></form><div>current half.si requests</div><hr>');
+$getRequestsQuery = "SELECT id, description, quantity, price FROM request WHERE status = 'verified';";
+$requestResults = mysqli_query($link, $getRequestsQuery);
+if($requestResults !== false){
+    while($requestRow = mysqli_fetch_array($requestResults)) {
+        $id = $requestRow['id'];
+        $description = $requestRow['description'];
+        $quantity = $requestRow['quantity'];
+        $price = $requestRow['price'];
+        echo("<div><div>description ".$description."</div><div>quantity ".$quantity."</div><div>price ".$price."</div><div><form method='post'>email <input type='text' name='email'></div><div>comments <input type='text' name='comments'></div><div><input type='submit' value='go half.si on it'></div><input type='hidden' name='id' value='".$id."'></form></div></div><hr>");
+    }
+} else {
+    echo("error loading requests.");
+    error_log("Error loading requests ".$getRequestsQuery);
+}
+
 function sendEmailMessage($subject, $message, $email){
     
     $body['body'] = $message;
